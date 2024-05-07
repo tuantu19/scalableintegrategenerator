@@ -1,7 +1,10 @@
-const groupBy = (arr, func) =>
-  arr
-    .map(typeof func === "function" ? func : (val) => val[func])
-    .reduce((acc, val, i) => {
-      acc[val] = (acc[val] || []).concat(arr[i]);
-      return acc;
-    }, {});
+function rob(nums) {
+  let prevMax = 0;
+  let currMax = 0;
+  for (const num of nums) {
+    const temp = currMax;
+    currMax = Math.max(prevMax + num, currMax);
+    prevMax = temp;
+  }
+  return currMax;
+}
