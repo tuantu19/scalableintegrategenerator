@@ -1,25 +1,20 @@
-function trap(height) {
-  let totalWater = 0;
-  let left = 0;
-  let right = height.length - 1;
-  let maxLeft = 0;
-  let maxRight = 0;
-  while (left < right) {
-    if (height[left] < height[right]) {
-      if (height[left] >= maxLeft) {
-        maxLeft = height[left];
-      } else {
-        totalWater += maxLeft - height[left];
-      }
-      left++;
-    } else {
-      if (height[right] >= maxRight) {
-        maxRight = height[right];
-      } else {
-        totalWater += maxRight - height[right];
-      }
-      right--;
+function calculate(s) {
+  const stack = [];
+  let num = 0;
+  let sign = "+";
+  for (let i = 0; i < s.length; i++) {
+    const char = s[i];
+    if (!isNaN(parseInt(char)) && char !== " ") {
+      num = num * 10 + parseInt(char);
+    }
+    if (isNaN(parseInt(char)) || i === s.length - 1) {
+      if (sign === "+") stack.push(num);
+      else if (sign === "-") stack.push(-num);
+      else if (sign === "*") stack.push(stack.pop() * num);
+      else if (sign === "/") stack.push(parseInt(stack.pop() / num));
+      num = 0;
+      sign = char;
     }
   }
-  return totalWater;
+  return stack.reduce((acc, val) => acc + val, 0);
 }
