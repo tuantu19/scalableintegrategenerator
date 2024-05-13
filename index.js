@@ -1,20 +1,30 @@
-function calculate(s) {
-  const stack = [];
-  let num = 0;
-  let sign = "+";
-  for (let i = 0; i < s.length; i++) {
-    const char = s[i];
-    if (!isNaN(parseInt(char)) && char !== " ") {
-      num = num * 10 + parseInt(char);
+function maximalRectangle(matrix) {
+  if (matrix.length === 0) return 0;
+  const rows = matrix.length;
+  const cols = matrix[0].length;
+  const heights = Array(cols).fill(0);
+  let maxArea = 0;
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      heights[j] = matrix[i][j] === "1" ? heights[j] + 1 : 0;
     }
-    if (isNaN(parseInt(char)) || i === s.length - 1) {
-      if (sign === "+") stack.push(num);
-      else if (sign === "-") stack.push(-num);
-      else if (sign === "*") stack.push(stack.pop() * num);
-      else if (sign === "/") stack.push(parseInt(stack.pop() / num));
-      num = 0;
-      sign = char;
-    }
+    maxArea = Math.max(maxArea, largestRectangleArea(heights));
   }
-  return stack.reduce((acc, val) => acc + val, 0);
+  return maxArea;
+  function largestRectangleArea(heights) {
+    const stack = [];
+    let maxArea = 0;
+    for (let i = 0; i <= heights.length; i++) {
+      while (
+        stack.length !== 0 &&
+        (i === heights.length || heights[i] < heights[stack[stack.length - 1]])
+      ) {
+        const height = heights[stack.pop()];
+        const width = stack.length === 0 ? i : i - stack[stack.length - 1] - 1;
+        maxArea = Math.max(maxArea, height * width);
+      }
+      stack.push(i);
+    }
+    return maxArea;
+  }
 }
